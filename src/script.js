@@ -2,17 +2,6 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-// cursor
-let cursor = {
-    x: 0,
-    y: 0
-}
-
-window.addEventListener('mousemove', (event) => {
-    cursor.x = event.clientX / sizes. width - 0.5
-    cursor.y = - (event.clientY / sizes. height - 0.5)
-})
-
 const scene = new THREE.Scene()
 
 const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -26,13 +15,10 @@ const sizes = {
     height: 600
 }
 
-
 const aspectRatio = sizes.width / sizes.height
+
 const camera = new THREE.PerspectiveCamera(45, aspectRatio, 1, 100)
-// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, -1, 1, 0.1, 100)
-
 camera.position.y = 5
-
 scene.add(camera)
 
 const canvas = document.querySelector(".webgl")
@@ -47,17 +33,10 @@ const Clock = new THREE.Clock()
 
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
-controls.target.z = 1
-controls.update()
 
 function tick() {
     // update scene
-    // mesh.rotation.y = Clock.getElapsedTime()
-    
-    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 5
-    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 5
-    // camera.position.y = cursor.y * 6
-    // camera.lookAt(mesh.position)
+    mesh.rotation.y = Clock.getElapsedTime()
 
     controls.update() // needed if using damping with controls
 
