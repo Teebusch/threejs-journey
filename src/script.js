@@ -1,6 +1,19 @@
 import './style.css'
 import * as THREE from 'three'
 
+// cursor
+
+let cursor = {
+    x: 0,
+    y: 0
+}
+
+window.addEventListener('mousemove', (event) => {
+    cursor.x = event.clientX / sizes. width - 0.5
+    cursor.y = - (event.clientY / sizes. height - 0.5)
+})
+
+
 const scene = new THREE.Scene()
 
 const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -14,8 +27,11 @@ const sizes = {
     height: 600
 }
 
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-camera.position.z = 3
+
+const aspectRatio = sizes.width / sizes.height
+const camera = new THREE.PerspectiveCamera(45, aspectRatio, 1, 100)
+// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, -1, 1, 0.1, 100)
+
 scene.add(camera)
 
 
@@ -31,7 +47,12 @@ const Clock = new THREE.Clock()
 
 function tick() {
     // update scene
-    mesh.rotation.y = Clock.getElapsedTime()
+    // mesh.rotation.y = Clock.getElapsedTime()
+    
+    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 5
+    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 5
+    camera.position.y = cursor.y * 6
+    camera.lookAt(mesh.position)
 
     renderer.render(scene, camera)
     window.requestAnimationFrame(tick)
