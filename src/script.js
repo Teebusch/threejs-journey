@@ -38,19 +38,30 @@ const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
 
-const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
 
 window.addEventListener('dblclick', (event) => {
-    if (!fullscreenElement) {
-        if (canvas.requestFullscreen) {
+
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
+
+    if (!fullscreenElement) 
+    {
+        if (canvas.requestFullscreen) 
+        {
             canvas.requestFullscreen()
-        } else if (canvas.webkitRsequestFullscreen) {
+        } 
+        else if (canvas.webkitRequestFullscreen) 
+        {
             canvas.webkitRequestFullscreen()
         }
-    } else {
-        if (document.exitFullscreen) {
+    } 
+    else 
+    {
+        if (document.exitFullscreen) 
+        {
             document.exitFullscreen()
-        } else if (document.webkitExitFullscreen) {
+        } 
+        else if (document.webkitExitFullscreen) 
+        {
             document.webkitExitFullscreen()
         }
     }
