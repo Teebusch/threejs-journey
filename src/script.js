@@ -15,8 +15,20 @@ let aspectRatio = sizes.width / sizes.height
 // scene
 const scene = new THREE.Scene()
 
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xE3AC5A })
+// create particles
+const geometry = new THREE.BufferGeometry()
+
+const count = 300 // number of particles
+
+const positionsArray = new Float32Array(count * 3 * 3)
+for(let i = 0; i < count * 3 * 3; i++) {
+    positionsArray[i] = (Math.random() - 0.5) * 7
+}
+
+const positionsAttr = new THREE.BufferAttribute(positionsArray, 3)
+geometry.setAttribute("position", positionsAttr)
+
+const material = new THREE.MeshBasicMaterial({ color: 0xE3AC5A, wireframe: true })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
@@ -57,7 +69,7 @@ window.addEventListener('resize', () => {
 const Clock = new THREE.Clock()
 
 function tick() {
-    mesh.rotation.y = Clock.getElapsedTime()
+    mesh.rotation.y = Clock.getElapsedTime() * 0.1
 
     controls.update() // required when using damping with controls
 
