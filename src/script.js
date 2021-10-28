@@ -1,7 +1,12 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import * as dat from 'dat.gui'
+import gsap from 'gsap'
 
+
+const gui = new dat.GUI({ width: 300 })
+//gui.hide()
 
 // canvas size
 const sizes = {
@@ -11,15 +16,32 @@ const sizes = {
 
 let aspectRatio = sizes.width / sizes.height
 
+const parameters = {
+    color: 0xE3AC5A,
+    spin: () => {
+        console.log("spin")
+        gsap.to(mesh.rotation, { duration: 1, y:  mesh.rotation.y + 10 })
+    }
+}
 
 // scene
 const scene = new THREE.Scene()
 
 const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xE3AC5A })
+const material = new THREE.MeshBasicMaterial({ color: parameters.color })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
+// debug
+// press h to hide / unhide
+gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
+gui.add(material, 'wireframe')
+
+gui.add(parameters, 'spin')
+
+gui.addColor(parameters, 'color').onChange(() => {
+    material.color.set(parameters.color)
+})
 
 // camera
 const camera = new THREE.PerspectiveCamera(45, aspectRatio, 1, 100)
@@ -57,7 +79,7 @@ window.addEventListener('resize', () => {
 const Clock = new THREE.Clock()
 
 function tick() {
-    mesh.rotation.y = Clock.getElapsedTime()
+    // mesh.rotation.y = Clock.getElapsedTime()
 
     controls.update() // required when using damping with controls
 
