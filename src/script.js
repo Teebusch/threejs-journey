@@ -19,8 +19,7 @@ let aspectRatio = sizes.width / sizes.height
 const parameters = {
     color: 0xE3AC5A,
     spin: () => {
-        console.log("spin")
-        gsap.to(mesh.rotation, { duration: 1, y:  mesh.rotation.y + 10 })
+        gsap.to(mesh.rotation, { duration: 2, y:  mesh.rotation.y + 4 * Math.PI })
     }
 }
 
@@ -79,7 +78,8 @@ window.addEventListener('resize', () => {
 const Clock = new THREE.Clock()
 
 function tick() {
-     mesh.rotation.y = Clock.getElapsedTime()
+     const elapsedTime = Clock.getElapsedTime()
+     // mesh.rotation.y = 2* Math.PI * (Math.cos(elapsedTime) + 0.5)
 
     controls.update() // required when using damping with controls
 
