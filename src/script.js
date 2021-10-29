@@ -79,7 +79,7 @@ window.addEventListener('resize', () => {
 const Clock = new THREE.Clock()
 
 function tick() {
-    // mesh.rotation.y = Clock.getElapsedTime()
+     mesh.rotation.y = Clock.getElapsedTime()
 
     controls.update() // required when using damping with controls
 
