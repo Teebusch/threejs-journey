@@ -4,6 +4,15 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as dat from 'dat.gui'
 import gsap from 'gsap'
 
+// Textures
+const image = new Image()
+const texture = new THREE.Texture(image)
+
+image.onload = () => {
+    texture.needsUpdate = true;
+}
+
+image.src = "/door.jpg"
 
 const gui = new dat.GUI({ width: 300 })
 //gui.hide()
@@ -27,7 +36,10 @@ const parameters = {
 const scene = new THREE.Scene()
 
 const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: parameters.color })
+const material = new THREE.MeshBasicMaterial({ 
+    //color: parameters.color,
+    map: texture
+})
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
