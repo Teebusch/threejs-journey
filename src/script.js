@@ -1,21 +1,47 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import * as dat from 'dat.gui'
+import * as dat from 'lil-gui'
 import gsap from 'gsap'
 
-// Textures
-const image = new Image()
-const texture = new THREE.Texture(image)
+// Load assets
+const loadingManager = new THREE.LoadingManager()
 
-image.onload = () => {
-    texture.needsUpdate = true;
+loadingManager.onStart = () => {
+    console.log("start");
+}
+loadingManager.onLoad = () => {
+    console.log("loaded");
+}
+loadingManager.onProgress = () => {
+    console.log("progress");
+}
+loadingManager.onError = () => {
+    console.log("error");
 }
 
-image.src = "/door.jpg"
+loadingManager.onS
+const textureLoader = new THREE.TextureLoader(loadingManager)
+const colorTexture = textureLoader.load('/minecraft.png')
+const alphaTexture = textureLoader.load('/alpha.jpg')
+const heightTexture = textureLoader.load('/height.jpg')
+const normalTexture = textureLoader.load('/normal.jpg')
+const metalnessTexture = textureLoader.load('/metalness.jpg')
+const roughnessTexture = textureLoader.load('/roughness.jpg')
+const ambientOcclusionTexture = textureLoader.load('/ambientOcclusion.jpg')
 
-const gui = new dat.GUI({ width: 300 })
-//gui.hide()
+colorTexture.generateMipmaps = false
+colorTexture.minFilter = THREE.NearestFilter // min mapping
+colorTexture.magFilter = THREE.NearestFilter
+//colorTexture.repeat.x = 2
+//colorTexture.repeat.y = 2
+//colorTexture.offset.x = 0.5
+//colorTexture.offset.y = 0.5
+// colorTexture.center.x = 0.5
+// colorTexture.center.y = 0.5
+// colorTexture.rotation = Math.PI / 4
+// colorTexture.wrapS = THREE.MirroredRepeatWrapping
+// colorTexture.wrapT = THREE.RepeatWrapping
 
 // canvas size
 const sizes = {
@@ -38,16 +64,17 @@ const scene = new THREE.Scene()
 const geometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshBasicMaterial({ 
     //color: parameters.color,
-    map: texture
+    map: colorTexture
 })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
-// debug
-// press h to hide / unhide
+
+// debug gui (press h to hide / unhide) or gui.hide()
+
+const gui = new dat.GUI({ width: 300 })
 gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
 gui.add(material, 'wireframe')
-
 gui.add(parameters, 'spin')
 
 gui.addColor(parameters, 'color').onChange(() => {
