@@ -27,16 +27,6 @@ const material = new THREE.MeshBasicMaterial({ color: parameters.color })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
-// debug - press h to hide / unhide, or use gui.hide()
-const gui = new lilgui.GUI({ width: 300 })
-
-gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
-gui.add(material, 'wireframe')
-gui.add(parameters, 'spin')
-gui.addColor(parameters, 'color').onChange(() => {
-    material.color.set(parameters.color)
-})
-
 
 // camera
 const camera = new THREE.PerspectiveCamera(45, aspectRatio, 1, 100)
@@ -51,11 +41,6 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 
-// interactive controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
-
-
 // resize render when window size changes
 window.addEventListener('resize', () => {
     sizes.width = window.innerWidth
@@ -67,6 +52,22 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix()
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+
+// interactive controls
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
+
+
+// debug - press h to hide / unhide, or use gui.hide()
+const gui = new lilgui.GUI({ width: 300 })
+
+gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
+gui.add(material, 'wireframe')
+gui.add(parameters, 'spin')
+gui.addColor(parameters, 'color').onChange(() => {
+    material.color.set(parameters.color)
 })
 
 
