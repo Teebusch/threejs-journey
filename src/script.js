@@ -1,12 +1,8 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import * as dat from 'dat.gui'
+import * as lilgui from 'lil-gui'
 import gsap from 'gsap'
-
-
-const gui = new dat.GUI({ width: 300 })
-//gui.hide()
 
 // canvas size
 const sizes = {
@@ -31,16 +27,16 @@ const material = new THREE.MeshBasicMaterial({ color: parameters.color })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
-// debug
-// press h to hide / unhide
+// debug - press h to hide / unhide, or use gui.hide()
+const gui = new lilgui.GUI({ width: 300 })
+
 gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
 gui.add(material, 'wireframe')
-
 gui.add(parameters, 'spin')
-
 gui.addColor(parameters, 'color').onChange(() => {
     material.color.set(parameters.color)
 })
+
 
 // camera
 const camera = new THREE.PerspectiveCamera(45, aspectRatio, 1, 100)
