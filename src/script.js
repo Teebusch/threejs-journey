@@ -3,8 +3,28 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as lilgui from 'lil-gui'
 import gsap from 'gsap'
+import { MeshToonMaterial } from 'three'
+
+
+
+// settings for debug panel
+
+const parameters = {
+    color: 0xE3AC5A,
+    spin: () => {
+        gsap.to(
+            mesh.rotation, { 
+                duration: 2, 
+                y: mesh.rotation.y + 4 * Math.PI 
+            }
+        )
+    }
+}
+
+
 
 // canvas size
+
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -12,36 +32,47 @@ const sizes = {
 
 let aspectRatio = sizes.width / sizes.height
 
-const parameters = {
-    color: 0xE3AC5A,
-    spin: () => {
-        gsap.to(mesh.rotation, { duration: 2, y:  mesh.rotation.y + 4 * Math.PI })
-    }
-}
+
 
 // scene
 const scene = new THREE.Scene()
 
+
+
+// starter cube
 const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: parameters.color })
+const material = new THREE.MeshBasicMaterial({ 
+    color: parameters.color 
+})
 const mesh = new THREE.Mesh(geometry, material)
+mesh.rotateY(2)
 scene.add(mesh)
 
 
+
 // camera
+
 const camera = new THREE.PerspectiveCamera(45, aspectRatio, 1, 100)
-camera.position.y = 5
+camera.position.set(0, 2, 5)
 scene.add(camera)
 
 
+
 // renderer
+
 const canvas = document.querySelector(".webgl")
-const renderer = new THREE.WebGLRenderer({ canvas, alpha: true })
+
+const renderer = new THREE.WebGLRenderer({ 
+    canvas, 
+    alpha: true 
+})
+
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 
 // resize render when window size changes
+
 window.addEventListener('resize', () => {
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
@@ -55,12 +86,15 @@ window.addEventListener('resize', () => {
 })
 
 
+
 // interactive controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
 
-// debug - press h to hide / unhide, or use gui.hide()
+
+// debug panel - press h to hide / unhide, or use gui.hide()
+
 const gui = new lilgui.GUI({ width: 300 })
 
 gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
@@ -71,7 +105,9 @@ gui.addColor(parameters, 'color').onChange(() => {
 })
 
 
+
 // animation loop
+
 const Clock = new THREE.Clock()
 
 function tick() {
