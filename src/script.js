@@ -3,7 +3,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as lilgui from 'lil-gui'
 import gsap from 'gsap'
-import { MeshToonMaterial } from 'three'
 
 
 
@@ -35,25 +34,110 @@ let aspectRatio = sizes.width / sizes.height
 
 
 // scene
+
 const scene = new THREE.Scene()
 
 
 
-// starter cube
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ 
-    color: parameters.color 
-})
-const mesh = new THREE.Mesh(geometry, material)
-mesh.rotateY(2)
-scene.add(mesh)
+// objects
 
+const material = new THREE.MeshStandardMaterial({ 
+    color: 0xefefef,
+    roughness: 0.2
+})
+
+
+const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(14, 14),
+    material
+)
+plane.rotation.x = - Math.PI * 0.5
+plane.position.y = - 0.7
+scene.add(plane)
+
+
+const box = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    material
+)
+box.rotateY(2)
+scene.add(box)
+
+
+const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.7, 16, 16),
+    material
+)
+sphere.position.set(-2, 0, 0)
+scene.add(sphere)
+
+
+const torus = new THREE.Mesh(
+    new THREE.TorusGeometry(0.4, 0.2, 16, 16),
+    material
+)
+torus.position.set(2, 0, 0)
+scene.add(torus)
+
+
+// lights
+
+const ambientLight = new THREE.AmbientLight(0xefefef, 0.1)
+
+scene.add(ambientLight)
+
+
+const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.1)
+directionalLight.position.set(5, 7, 0)
+scene.add(directionalLight)
+
+
+const hemisphereLight = new THREE.HemisphereLight(0xAD4133, 0x3F9FB3, 0.3)
+scene.add(hemisphereLight)
+
+
+const pointLight = new THREE.PointLight(0xECAB48, 0.3)
+pointLight.position.set(0, 3, 2)
+scene.add(pointLight)
+
+
+const rectAreaLight = new THREE.RectAreaLight(0xFB6B99, 4, 2, 5, 1)
+rectAreaLight.position.set(0, 2, -1)
+rectAreaLight.lookAt(new THREE.Vector3())
+scene.add(rectAreaLight)
+
+
+const spotLight = new THREE.SpotLight(0x78ff00, 0.5, 10, Math.PI * 0.4, 0.25)
+scene.add(spotLight)
+spotLight.position.set(0, 2, 3)
+scene.add(spotLight.target)
+spotLight.target.position.set(0, 2, 0)
+
+window.requestAnimationFrame(() =>
+{
+    spotLightHelper.update()
+})
+
+
+// helpers
+
+// const hemisphereLightHelper = new THREE.HemisphereLightHelper(hemisphereLight, 1)
+// scene.add(hemisphereLightHelper)
+
+// const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 1)
+// scene.add(directionalLightHelper)
+
+// const pointLightHelper = new THREE.PointLightHelper(pointLight, 1)
+// scene.add(pointLightHelper, 1)
+
+// const spotLightHelper = new THREE.SpotLightHelper(spotLight, 2)
+// scene.add(spotLightHelper)
 
 
 // camera
 
 const camera = new THREE.PerspectiveCamera(45, aspectRatio, 1, 100)
-camera.position.set(0, 2, 5)
+camera.position.set(0, 2, 10)
 scene.add(camera)
 
 
@@ -97,11 +181,12 @@ controls.enableDamping = true
 
 const gui = new lilgui.GUI({ width: 300 })
 
-gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
+//gui.add(mesh.position, 'y', -3, 3, 0.1).name("elevation")
 gui.add(material, 'wireframe')
+gui.add(ambientLight, 'intensity', 0, 1)
 gui.add(parameters, 'spin')
 gui.addColor(parameters, 'color').onChange(() => {
-    material.color.set(parameters.color)
+    ///material.color.set(parameters.color)
 })
 
 
