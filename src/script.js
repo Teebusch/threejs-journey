@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as lilgui from 'lil-gui'
 import gsap from 'gsap'
-import { MeshBasicMaterial, MeshToonMaterial } from 'three'
+import { MeshBasicMaterial, MeshToonMaterial, ShortType } from 'three'
 
 
 
@@ -40,8 +40,8 @@ const scene = new THREE.Scene()
 
 // textures
 const textureLoader = new THREE.TextureLoader()
-const bakedShadow = textureLoader.load('textures/bakedShadow.jpg')
-
+//const bakedShadow = textureLoader.load('textures/bakedShadow.jpg')
+const simpleShadow = textureLoader.load('textures/simpleShadow.jpg')
 
 // Ambient light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1)
@@ -118,16 +118,30 @@ sphere.castShadow = true
 
 const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(5, 5),
-    new MeshBasicMaterial({
-        map: bakedShadow
-    })
+    material
 )
 plane.rotation.x = - Math.PI * 0.5
 plane.position.y = - 0.5
 
 plane.receiveShadow = true
 
-scene.add(sphere, plane)
+
+
+const sphereShadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.5, 1.5),
+    new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        alphaMap: simpleShadow,
+        transparent: true
+    })
+)
+
+sphereShadow.rotation.x = - Math.PI * 0.5 
+sphereShadow.position.y = plane.position.y + 0.01 
+
+
+scene.add(sphere, plane, sphereShadow)
+
 
 
 
@@ -206,6 +220,13 @@ const Clock = new THREE.Clock()
 function tick() {
      const elapsedTime = Clock.getElapsedTime()
      // mesh.rotation.y = 2* Math.PI * (Math.cos(elapsedTime) + 0.5)
+    sphere.position.x = Math.cos(elapsedTime) * 1.2
+    sphere.position.z = Math.sin(elapsedTime) * 1.2
+    sphere.position.y = Math.abs(Math.sin(elapsedTime * 4))
+
+    sphereShadow.position.x = sphere.position.x
+    sphereShadow.position.z = sphere.position.z
+    sphereShadow.material.opacity = 1 - sphere.position.y * 0.7
 
     controls.update() // required when using damping with controls
 
